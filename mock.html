@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Book</title>
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script>
+		$(document).ready(() => {
+			console.log("Page loaded");
+			$('#bookid').blur(() => {
+				console.log("Blur event occured");
+				let input = { bookid: $('#bookid').val() }
+				let parameterstothefunction = {
+					data: input,
+					url: 'http://localhost:8081/getbookid',
+					type: 'get',
+					datatype: 'json',
+					success: function(datafromserver){
+						console.log("Data fetched successfully");
+						console.log(datafromserver);
+						if(datafromserver.status===true){
+							$('#bookid').val(datafromserver.detail.bookid);
+							$('#msg').text("bookid is found");
+						}
+						else{
+							$('#bookid').val("");
+							$('#msg').text("bookid is not found");
+						}
+					},
+					error: function(errorfromserver){
+						console.log("some error occurred"+errorfromserver);
+					}
+				}
+				$.ajax(parameterstothefunction);
+			});
+			$('#update').click(()=>{
+				console.log("update button clicked");
+				let input={bookid: $('#bookid').val(), bookname: $('#bookname').val(), price: $('#price').val()}
+				let parameterstothefunction = {
+					data: input,
+					url: 'http://localhost:8081/updateprice',
+					type: 'get',
+					datatype: 'json',
+					success: function (datafromserver) {
+						console.log("Data fetched successfully");
+						console.log(datafromserver);
+						if (datafromserver.status === true) {
+							$('#msg').text("Price updated");
+						}
+						else {
+							$('#price').val('');
+							$('#msg').text("Price not updated");
+						}
+					},
+					error: function (errorfromserver) {
+						console.log("some error occurred" + errorfromserver);
+					}
+				}
+				$.ajax(parameterstothefunction);
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<input type="number" id="bookid" name="bookid" placeholder="bookid"><span id="msg"></span><br><br>
+	<input type="text" id="bookname" name="bookname" placeholder="bookname"><br><br>
+	<input type="number" id="price" name="price" placeholder="price"><br><br>
+	<input type="button" id="update" name="update" value="update">
+</body>
+
+</html>
